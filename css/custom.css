@@ -1,0 +1,49 @@
+.Menu{
+	float: right;
+	position: fixed;
+	top:0;
+    right: 0;
+	//z-index: 0;
+
+}
+#MenuBt{
+	position:absolute;
+	height:1000px;
+    left:5px; /* play around with this */
+    top:5px; /* and play around with this */
+    width:500px;
+}
+#Bg_menu{
+	max-width:100%;
+max-height:100%;
+    margin-left:auto;
+    margin-right:auto;
+    position:relative; /* and this has to be relative */
+    width:100%;
+	
+}
+#Bt_rev{
+	position: absolute;
+	z-index: 2;
+	width: 1000;
+}
+
+#Bt_news{
+	position: absolute;
+	z-index: 2;
+	top: 15%;
+	width: %;
+}
+#Bt_hme{
+	position: absolute;
+	z-index: 2;
+	left: 25%;
+}
+#Bt_gft{
+	z-index: 2;
+
+}
+#content{
+float: left;
+
+}
