@@ -3,8 +3,15 @@
 	position: fixed;
 	top:0;
     right: 0;
-	//z-index: 0;
+	z-index: -1000;
+	//width: 20%;
 
+}
+#content{
+	float: left;
+	width: 80%;
+
+	z-index: 0;
 }
 #MenuBt{
 	position:absolute;
@@ -14,8 +21,8 @@
     width:500px;
 }
 #Bg_menu{
-	max-width:100%;
-max-height:100%;
+	//max-width:100%;
+	//max-height:100%;
     margin-left:auto;
     margin-right:auto;
     position:relative; /* and this has to be relative */
@@ -23,27 +30,55 @@ max-height:100%;
 	
 }
 #Bt_rev{
+	background-image: url('../Pic/NBt_rev.png');
+	height: 150px;
+    width: 150px;
 	position: absolute;
 	z-index: 2;
-	width: 1000;
+	left: -1%;
+}
+#Bt_rev:hover{
+	background-image: url('../Pic/Bt_review.png');
+	
 }
 
 #Bt_news{
+	background-image: url('../Pic/NBt_news.png');
+	height: 150px;
+    width: 150px;
 	position: absolute;
 	z-index: 2;
 	top: 15%;
-	width: %;
+	left: -2%;
 }
+#Bt_news:hover{
+	background-image: url('../Pic/Bt_news.png');
+	
+}
+
 #Bt_hme{
+	background-image: url('../Pic/NBt_hme.png');
+	height: 150px;
+    width: 150px;
 	position: absolute;
 	z-index: 2;
-	left: 25%;
+	left: 23%;
 }
+#Bt_hme:hover{
+	background-image: url('../Pic/Bt_home.png');
+	
+}
+
 #Bt_gft{
+	background-image: url('../Pic/NBt_gft.png');
+	height: 150px;
+    width: 150px;
+	position: absolute;
 	z-index: 2;
-
+	left: 23%;
+	top: 15%;
 }
-#content{
-float: left;
-
+#Bt_gft:hover{
+	background-image: url('../Pic/Bt_gift.png');
+	
 }
