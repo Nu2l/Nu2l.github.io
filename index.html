@@ -1,326 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thamnongsin</title>
-    <!-- Add FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212; /* Changed to soft black tone */
-            color: #f0f0f0; /* Lighter text for better contrast */
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        .bg-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03; /* Reduced opacity for soft effect */
-            z-index: -1;
-            background-image: 
-                linear-gradient(45deg, #fff 25%, transparent 25%),
-                linear-gradient(-45deg, #fff 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #fff 75%),
-                linear-gradient(-45deg, transparent 75%, #fff 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-        
-        .container {
-            max-width: 800px;
-            text-align: center;
-            padding: 2rem;
-            background-color: #1e1e1e; /* Darker container on dark bg */
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease-in;
-        }
-        
-        .logo {
-            width: 100px;
-            height: 100px;
-            background-color: #3498db;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo::before {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.7);
-            top: 40px;
-            border-radius: 50%;
-            transform: rotate(-15deg);
-        }
-        
-        .logo::after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: white;
-            border-radius: 50%;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #f0f0f0; /* Lighter heading for better contrast */
-        }
-        
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #b0b0b0; /* Slightly softer text color */
-        }
-        
-        .progress {
-            height: 8px;
-            width: 100%;
-            background-color: #ecf0f1;
-            border-radius: 4px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        .status {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-        
-        .status div {
-            text-align: center;
-            flex: 1;
-        }
-        
-        .status-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .done {
-            color: #2ecc71;
-        }
-        
-        .pending {
-            color: #95a5a6;
-        }
-        
-        .social-links {
-            margin-top: 2rem;
-        }
-        
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            width: 40px;
-            height: 40px;
-            background-color: #333333; /* Darker background for social buttons */
-            border-radius: 50%;
-            color: #b0b0b0; /* Soft color for icons */
-            font-size: 1.2rem;
-            line-height: 40px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        
-        .social-links a:hover {
-            background-color: #3498db;
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .countdown {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        /* Canvas container with attribution on hover */
-        .canvas-container {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .canvas-attribution {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #aaaaaa;
-            font-size: 0.65rem;
-            padding: 5px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-        
-        .canvas-container:hover .canvas-attribution {
-            opacity: 1;
-        }
-        
-        .canvas-attribution a {
-            color: #aaaaaa;
-            text-decoration: none;
-        }
-        
-        .canvas-attribution a:hover {
-            color: #3498db;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .status {
-                flex-direction: column;
-            }
-            
-            .status div {
-                margin-bottom: 1rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Incident Report · 26 Jan – 15 Jun 2026</title>
+<style>
+  :root{
+    --navy:#1F3A5F; --ink:#1c2530; --muted:#5A6573; --line:#E2E8F0;
+    --bg:#F7F9FC; --card:#FFFFFF;
+    --dns:#2E75B6; --ssl:#C0504D; --cap:#E8A33D; --mnt:#3FA7A0; --sec:#9B59B6; --oth:#9AA5B1;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; font-size:16px}
+  .wrap{max-width:900px; margin:0 auto; padding:0 16px 72px}
+  a{color:inherit}
+
+  /* ---- sticky nav ---- */
+  .nav{position:sticky; top:0; z-index:40; background:rgba(247,249,252,.9); backdrop-filter:blur(8px);
+       border-bottom:1px solid var(--line); margin-bottom:8px}
+  .nav-inner{max-width:900px; margin:0 auto; display:flex; gap:4px; padding:8px 12px; overflow-x:auto;
+             -webkit-overflow-scrolling:touch; scrollbar-width:none}
+  .nav-inner::-webkit-scrollbar{display:none}
+  .nav a{font-family:var(--mono); font-size:12.5px; letter-spacing:.04em; text-decoration:none; color:var(--muted);
+         padding:7px 12px; border-radius:8px; white-space:nowrap; transition:background .15s,color .15s; font-weight:600}
+  .nav a:hover{background:#EAF1F8; color:var(--navy)}
+  .nav a.active{background:var(--navy); color:#fff}
+
+  section{margin:30px 0; scroll-margin-top:62px}
+
+  /* ---- masthead ---- */
+  .mast{border-bottom:3px solid var(--cap); padding:30px 0 18px; margin-bottom:6px}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--dns); font-weight:600; margin:0 0 8px}
+  h1{font-size:clamp(28px,6vw,42px); line-height:1.05; margin:0 0 6px; color:var(--navy); letter-spacing:-.02em; font-weight:800}
+  .subt{color:var(--muted); font-size:17px; margin:0}
+  .meta{display:flex; flex-wrap:wrap; gap:6px 28px; margin-top:14px; font-size:14px; color:var(--muted)}
+  .meta b{color:var(--ink)}
+
+  /* ---- stat strip ---- */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:24px 0 8px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 14px; text-align:center}
+  .stat .big{font-family:var(--mono); font-size:clamp(20px,4.5vw,30px); font-weight:700; color:var(--navy)}
+  .stat .lbl{font-size:12.5px; color:var(--muted); margin-top:4px}
+
+  h2{font-size:13px; font-family:var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--navy);
+     border-bottom:2px solid var(--dns); padding-bottom:7px; margin:0 0 18px; font-weight:700}
+  p{margin:0 0 14px}
+  .lead{font-size:17px}
+
+  /* ---- context callout ---- */
+  .callout{background:#FBF6EC; border:1px solid #EAD9B8; border-left:4px solid var(--cap); border-radius:10px; padding:16px 18px}
+  .callout h3{margin:0 0 7px; font-size:15.5px; color:var(--navy)}
+  .callout p{margin:0 0 10px; font-size:14.5px; color:#4a4334}
+  .callout p:last-child{margin:0}
+
+  /* ---- horizontal cause bars ---- */
+  .bars{display:flex; flex-direction:column; gap:11px}
+  .bar-row{display:grid; grid-template-columns:96px 1fr; align-items:center; gap:12px}
+  .bar-name{font-family:var(--mono); font-size:13px; font-weight:600; text-align:right; color:var(--ink)}
+  .bar-track{position:relative; background:#EDF1F6; border-radius:6px; height:30px}
+  .bar-fill{height:100%; border-radius:6px; width:var(--w); transform-origin:left; animation:grow .8s cubic-bezier(.2,.8,.25,1) both}
+  .bar-val{position:absolute; top:0; height:30px; display:flex; align-items:center; left:calc(var(--w) + 10px);
+           font-family:var(--mono); font-size:12.5px; color:var(--muted); white-space:nowrap}
+  .bar-val.inside{left:10px; color:#fff}
+  @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .note{font-size:13px; color:var(--muted); font-style:italic; margin-top:12px}
+
+  /* ---- monthly stacked chart ---- */
+  .month-chart{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 18px 12px; position:relative}
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:18px; font-size:13px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .swatch{width:12px; height:12px; border-radius:3px; display:inline-block}
+  .cols{display:flex; align-items:flex-end; gap:10px; height:268px; border-bottom:1px solid var(--line); position:relative}
+  .upgrade{position:absolute; left:calc(50% - 4px); top:-2px; bottom:0; border-left:2px dashed #8a93a0}
+  .upgrade b{position:absolute; top:0; left:6px; font-family:var(--mono); font-size:11px; color:#717b88; white-space:nowrap; font-weight:600}
+  .col{flex:1; display:flex; flex-direction:column-reverse; height:100%; justify-content:flex-start}
+  .seg{width:100%; transform-origin:bottom; animation:rise .9s cubic-bezier(.2,.8,.25,1) both}
+  .col .seg:first-child{border-radius:0 0 4px 4px}
+  .col .seg:last-child{border-radius:4px 4px 0 0}
+  @keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  .xaxis{display:flex; gap:10px; margin-top:8px}
+  .xaxis div{flex:1; text-align:center; font-family:var(--mono); font-size:12.5px; color:var(--muted)}
+  .col-total{text-align:center; font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:4px}
+
+  /* ---- pattern cards ---- */
+  .cards{display:grid; grid-template-columns:1fr; gap:12px; margin-top:18px}
+  .pcard{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--dns); border-radius:10px; padding:14px 16px}
+  .pcard:nth-child(1){border-left-color:var(--cap)}
+  .pcard:nth-child(2){border-left-color:var(--dns)}
+  .pcard:nth-child(3){border-left-color:var(--ssl)}
+  .pcard h3{margin:0 0 5px; font-size:15.5px; color:var(--navy)}
+  .pcard p{margin:0; font-size:14.5px; color:#39424e}
+
+  /* ---- pills & badges ---- */
+  .pill{display:inline-block; font-family:var(--mono); font-size:11.5px; font-weight:700; color:#fff; padding:3px 9px; border-radius:20px; letter-spacing:.03em}
+  .badge{font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 9px; border-radius:6px; letter-spacing:.03em; white-space:nowrap}
+  .badge.ok{background:#E6F4EC; color:#1E7A4D; border:1px solid #BFE3CF}
+  .badge.act{background:#FBEAEA; color:#A23A37; border:1px solid #F0C8C6}
+  .badge.neutral{background:#EEF1F5; color:#5A6573; border:1px solid #DCE2EA}
+
+  /* ---- problem -> fix matrix ---- */
+  .matrix{display:grid; grid-template-columns:1fr; gap:14px}
+  .pf{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+      display:grid; grid-template-columns:1fr 1fr; border-left:4px solid var(--oth)}
+  .pf .prob{padding:16px 18px; border-right:1px solid var(--line)}
+  .pf .fix{padding:16px 18px; background:#FBFCFE}
+  .pf .head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px}
+  .pf h3{margin:0 0 4px; font-size:15.5px; color:var(--navy); line-height:1.25}
+  .pf .impact{font-family:var(--mono); font-size:12px; color:var(--muted); margin:0 0 6px}
+  .pf .prob p{margin:0; font-size:13.5px; color:#475059}
+  .pf .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  .pf .fix p{margin:0 0 12px; font-size:13.5px; color:#39424e}
+  .pf .jump{appearance:none; border:1px solid var(--navy); background:transparent; color:var(--navy);
+            font-family:var(--mono); font-size:12px; font-weight:600; padding:7px 12px; border-radius:8px; cursor:pointer; transition:background .15s,color .15s}
+  .pf .jump:hover,.pf .jump:focus-visible{background:var(--navy); color:#fff}
+  .pf.dns{border-left-color:var(--dns)} .pf.ssl{border-left-color:var(--ssl)}
+  .pf.cap{border-left-color:var(--cap)} .pf.sec{border-left-color:var(--sec)}
+  .pf.oth{border-left-color:var(--oth)} .pf.mnt{border-left-color:var(--mnt)}
+
+  /* ---- recommendations ---- */
+  .rec-sub{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:28px 0 12px; font-weight:700}
+  ol.recs{counter-reset:r; list-style:none; padding:0; margin:0; display:grid; gap:11px}
+  ol.recs li{counter-increment:r; background:var(--card); border:1px solid var(--line); border-radius:10px;
+             padding:14px 16px 14px 54px; position:relative; font-size:14.5px; color:#39424e; scroll-margin-top:70px;
+             transition:background .3s, box-shadow .3s}
+  ol.recs li::before{content:counter(r); position:absolute; left:14px; top:13px; width:26px; height:26px; background:var(--navy);
+             color:#fff; border-radius:7px; font-family:var(--mono); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center}
+  ol.recs b{color:var(--navy)}
+  ol.recs li.flash{background:#FFF7E6; box-shadow:0 0 0 2px var(--cap)}
+
+  /* ---- decision block ---- */
+  .decision{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:8px;
+            scroll-margin-top:70px; transition:background .3s, box-shadow .3s}
+  .decision.flash{background:#FFF7E6; box-shadow:0 0 0 2px var(--cap)}
+  .decision .dh{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  .badge.dec{background:#FDEFD6; color:#9A6A12; border:1px solid #F0D9A8}
+  .decision h3{margin:0 0 14px; font-size:17px; color:var(--navy)}
+  .opts{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .opt{border:1px solid var(--line); border-radius:10px; padding:16px 16px 14px; position:relative}
+  .opt.rec{border-color:#2F9E6E; box-shadow:0 0 0 1px #2F9E6E}
+  .opt .tag{position:absolute; top:-10px; left:14px; font-family:var(--mono); font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:6px}
+  .opt.rec .tag{background:#2F9E6E; color:#fff}
+  .opt.alt .tag{background:#EEF1F5; color:#5A6573; border:1px solid #DCE2EA}
+  .opt h4{margin:4px 0 6px; font-size:15px; color:var(--navy)}
+  .opt dl{margin:0}
+  .opt dt{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:9px}
+  .opt dd{margin:2px 0 0; font-size:13px; color:#39424e}
+  .verdict{margin:14px 0 0; font-size:14px; color:#2c3a30; background:#F4FAF6; border-left:3px solid #2F9E6E; padding:11px 14px; border-radius:0 8px 8px 0}
+  .techy{margin:10px 0 0; font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.5}
+
+  /* ---- log + filters ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px}
+  .chip{appearance:none; cursor:pointer; font-family:var(--mono); font-size:12px; font-weight:600; padding:6px 12px;
+        border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--muted); transition:all .15s}
+  .chip:hover{border-color:var(--navy); color:var(--navy)}
+  .chip[aria-pressed="true"]{background:var(--navy); color:#fff; border-color:var(--navy)}
+  table{width:100%; border-collapse:collapse; font-size:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden}
+  thead th{background:var(--navy); color:#fff; font-family:var(--mono); font-weight:600; font-size:12px; letter-spacing:.05em; text-transform:uppercase; text-align:left; padding:10px 12px}
+  td{padding:9px 12px; border-top:1px solid var(--line); vertical-align:middle}
+  tbody tr:nth-child(even){background:#FAFCFE}
+  .num{text-align:center}
+  .log td:nth-child(1),.log td:nth-child(2),.log td:nth-child(3){font-family:var(--mono); font-size:13px; white-space:nowrap}
+  .log td:nth-child(3){font-weight:700; color:var(--navy)}
+  .count{font-family:var(--mono); font-size:12px; color:var(--muted); margin:10px 2px 0}
+
+  .footer{margin-top:40px; padding-top:14px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px}
+
+  @media(max-width:680px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .bar-row{grid-template-columns:74px 1fr}
+    .cols{height:210px} .col-total{display:none}
+    .pf{grid-template-columns:1fr}
+    .pf .prob{border-right:none; border-bottom:1px solid var(--line)}
+    table{font-size:12.5px} td,thead th{padding:7px 8px}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important} html{scroll-behavior:auto}}
+  @media print{.nav{display:none} body{background:#fff} .pf,.stat,.pcard,ol.recs li,table,.month-chart{break-inside:avoid}}
+</style>
 </head>
 <body>
-    <div class="bg-pattern"></div>
-    <div class="container">
-        <div class="canvas-container">
-            <canvas id="canvas" width="400" height="400"></canvas>
-            <div class="canvas-attribution">
-                Lottie Animation: <a href="https://iconscout.com/lottie-animations/security-research" target="_blank">Security Research</a> by 
-                <a href="https://iconscout.com/contributors/nanoagency" target="_blank">nanoagency</a> on 
-                <a href="https://iconscout.com" target="_blank">IconScout</a>
-            </div>
-        </div>
-        
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        
-        <div class="status">
-            <div>
-                <div class="status-icon done">✓</div>
-                <p>Research</p>
-            </div>
-            <div>
-                <div class="status-icon done">✓</div>
-                <p>Design</p>
-            </div>
-            <div>
-                <div class="status-icon current">⋯</div>
-                <p>Building</p>
-            </div>
-            <div>
-                <div class="status-icon pending">⋯</div>
-                <p>Launch</p>
-            </div>
-        </div>
-        
-        <div class="social-links">
-            <a href="https://www.facebook.com/tamnongsin.supawattana" target="_blank" aria-label="Facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="mailto:contact@thamnongsin.com" aria-label="Email">
-                <i class="far fa-envelope"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/thamnongsin-s/" target="_blank" aria-label="LinkedIn">
-                <i class="fab fa-linkedin-in"></i>
-            </a>
-        </div>
+
+<nav class="nav" aria-label="Sections">
+  <div class="nav-inner">
+    <a href="#summary" class="active">Summary</a>
+    <a href="#causes">Causes</a>
+    <a href="#trend">Trend</a>
+    <a href="#fixes">Problem → Fix</a>
+    <a href="#log">Incident log</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Infrastructure · Downtime Review</p>
+    <h1>Server Incident Report</h1>
+    <p class="subt">26 January – 15 June 2026</p>
+    <div class="meta">
+      <span><b>Prepared by:</b> Development team</span>
+      <span><b>Period:</b> ~20 weeks</span>
+      <span><b>Incidents:</b> 20</span>
+      <span><b>Date:</b> 18 June 2026</span>
     </div>
-    
-    <script>
-        // Progress bar animation
-        function animateProgress() {
-            const progressBar = document.getElementById('progress-bar');
-            let width = 0;
-            
-            const interval = setInterval(() => {
-                if (width >= 65) {
-                    clearInterval(interval);
-                } else {
-                    width++;
-                    progressBar.style.width = width + '%';
-                }
-            }, 50);
-        }
-        
-        
-        // Initialize animations when page loads
-        window.addEventListener('load', () => {
-            animateProgress();
-        });
-    </script>
-        <script type="module">
-            import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
-      
-            new DotLottie({
-              autoplay: true,
-              loop: true,
-              canvas: document.getElementById("canvas"),
-              src: "5967185.lottie", // or .json file
-            });
-          </script>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="big">20</div><div class="lbl">Incidents</div></div>
+    <div class="stat"><div class="big">~24h 50m</div><div class="lbl">Total downtime</div></div>
+    <div class="stat"><div class="big">75 min</div><div class="lbl">Avg / incident</div></div>
+    <div class="stat"><div class="big">5h 08m</div><div class="lbl">Longest outage</div></div>
+  </div>
+
+  <section id="summary">
+    <h2>Executive summary</h2>
+    <p class="lead">Over the 20-week period, 20 separate outages were recorded, totalling roughly <b>24 hours 50 minutes</b> of downtime. Three causes dominate. DNS-related failures are the most frequent problem (8 of 20 events) and have become the recurring issue since April. Expired SSL certificates produced the two single longest outages and the most lost minutes per event. Capacity problems on the L-sized server were the early pain point but appear resolved after the upgrade to an XL instance at the end of March.</p>
+    <p>Every issue below has a clear fix, and most are straightforward for the team to action. <b>One choice needs a decision from leadership</b> — how to renew the SSL certificates — where the development team recommends Option 1. It is summarised in <a href="#ssl-decision" style="color:var(--dns);font-weight:600;text-decoration:none">Problem → Fix</a>.</p>
+    <div class="callout">
+      <h3>How the incidents connect</h3>
+      <p>The DDoS and DNS categories are linked. The DDoS event on 5 March prompted an architecture change: traffic was moved from connecting directly to the EC2 instance to routing through <b>Amazon CloudFront</b>, in order to absorb attack traffic and gain better control over requests to the web app. That migration required repointing DNS from EC2 to CloudFront — and is the origin of the recurring DNS failures described below.</p>
+      <p>The capacity crashes are a <b>separate, now-closed thread</b>, resolved by the upgrade from an L to an XL instance at the end of March. They are not related to the CloudFront migration.</p>
+    </div>
+  </section>
+
+  <section id="causes">
+    <h2>Downtime by root cause</h2>
+    <div class="bars">
+      <div class="bar-row"><div class="bar-name">DNS</div><div class="bar-track"><div class="bar-fill" style="--w:100%;background:var(--dns)"></div><div class="bar-val inside">582 min · 8 events</div></div></div>
+      <div class="bar-row"><div class="bar-name">SSL</div><div class="bar-track"><div class="bar-fill" style="--w:88.8%;background:var(--ssl)"></div><div class="bar-val inside">517 min · 2 events</div></div></div>
+      <div class="bar-row"><div class="bar-name">Capacity</div><div class="bar-track"><div class="bar-fill" style="--w:61.7%;background:var(--cap)"></div><div class="bar-val inside">359 min · 5 events</div></div></div>
+      <div class="bar-row"><div class="bar-name">Maintenance</div><div class="bar-track"><div class="bar-fill" style="--w:1.9%;background:var(--mnt)"></div><div class="bar-val">11 min · 2 events</div></div></div>
+      <div class="bar-row"><div class="bar-name">DDoS</div><div class="bar-track"><div class="bar-fill" style="--w:1.7%;background:var(--sec)"></div><div class="bar-val">10 min · 1 event</div></div></div>
+      <div class="bar-row"><div class="bar-name">Other</div><div class="bar-track"><div class="bar-fill" style="--w:1.9%;background:var(--oth)"></div><div class="bar-val">11 min · 2 events</div></div></div>
+    </div>
+    <p class="note">DNS and SSL together account for roughly three-quarters of all downtime, despite being only half of the events.</p>
+  </section>
+
+  <section id="trend">
+    <h2>Trend over time</h2>
+    <div class="month-chart">
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--cap)"></i>Capacity</span>
+        <span><i class="swatch" style="background:var(--dns)"></i>DNS</span>
+        <span><i class="swatch" style="background:var(--ssl)"></i>SSL expiry</span>
+        <span><i class="swatch" style="background:var(--oth)"></i>Other / planned</span>
+      </div>
+      <div class="cols">
+        <div class="upgrade"><b>XL upgrade</b></div>
+        <div class="col"><div class="col-total">290</div><div class="seg" style="height:206px;background:var(--cap)"></div></div>
+        <div class="col"><div class="col-total">131</div><div class="seg" style="height:45px;background:var(--cap)"></div><div class="seg" style="height:45px;background:var(--dns)"></div><div class="seg" style="height:4px;background:var(--oth)"></div></div>
+        <div class="col"><div class="col-total">188</div><div class="seg" style="height:4px;background:var(--cap)"></div><div class="seg" style="height:110px;background:var(--dns)"></div><div class="seg" style="height:19px;background:var(--oth)"></div></div>
+        <div class="col"><div class="col-total">366</div><div class="seg" style="height:41px;background:var(--dns)"></div><div class="seg" style="height:219px;background:var(--ssl)"></div></div>
+        <div class="col"><div class="col-total">233</div><div class="seg" style="height:166px;background:var(--dns)"></div></div>
+        <div class="col"><div class="col-total">282</div><div class="seg" style="height:52px;background:var(--dns)"></div><div class="seg" style="height:148px;background:var(--ssl)"></div></div>
+      </div>
+      <div class="xaxis"><div>Jan</div><div>Feb</div><div>Mar</div><div>Apr</div><div>May</div><div>Jun</div></div>
+    </div>
+
+    <div class="cards">
+      <div class="pcard">
+        <h3>Capacity crashes stopped after the XL upgrade</h3>
+        <p>All four “server dead (L size)” crashes occurred on or before 20 March. None have recurred since the instance was resized to XL at the end of March — the upgrade appears to have addressed the under-provisioning.</p>
+      </div>
+      <div class="pcard">
+        <h3>DNS failures trace back to the CloudFront migration</h3>
+        <p>After moving the app behind CloudFront, DNS had to be repointed from EC2 to CloudFront. KMUTT CC (the DNS administrator) was asked to add either an A record to the CloudFront domain or a CNAME, and chose to add an <b>A record</b>. Because CloudFront serves from a rotating pool of edge IP addresses, a fixed A record can fail whenever those addresses change — consistent with the recurring early-morning outages (~04:00–07:30) seen since the migration. A CNAME or alias record would follow CloudFront's current addresses automatically.</p>
+      </div>
+      <div class="pcard">
+        <h3>SSL expiries are rare but very costly</h3>
+        <p>The two certificate-expiry events (11 Apr and 9 Jun) caused 5h 08m and 3h 29m of downtime — the worst outages in the period. Both the CloudFront and ALB certs are Let's Encrypt imported into ACM, and imported certs don't auto-renew — so a single missed manual re-import took both down at once. Fully preventable with native ACM certificates.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="fixes">
+    <h2>Problem → Fix</h2>
+    <p class="note" style="font-style:normal;color:var(--muted);margin-bottom:18px">Each problem is paired with its recommended action and current status. One item — SSL renewal — needs a leadership decision; the rest are for the team to action. Use the buttons to jump to the detail.</p>
+
+    <div class="matrix">
+
+      <article class="pf ssl">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--ssl)">SSL</span><span class="badge act">Action needed</span></div>
+          <h3>Expired TLS certificates (CloudFront + ALB)</h3>
+          <p class="impact">8h 37m · 2 events · longest outages</p>
+          <p>Both certs are Let's Encrypt imported into ACM — one for CloudFront, one for the ALB. Imported certs don't auto-renew in ACM, so when the manual 90-day re-import was missed, both expired together.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Recommended fix</p>
+          <p>Replace them with native ACM certificates, which auto-renew on both CloudFront and the ALB (KMUTT CC adds the DNS validation record once). A renewal script for Let's Encrypt is a fallback only — it rebuilds the same fragility. See actions 1 and 2.</p>
+          <button class="jump" data-target="#ssl-decision">View full actions →</button>
+        </div>
+      </article>
+
+      <article class="pf dns">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--dns)">DNS</span><span class="badge act">Action needed</span></div>
+          <h3>Wrong DNS record type after CloudFront move</h3>
+          <p class="impact">9h 42m · 8 events · most frequent</p>
+          <p>KMUTT CC added an A record instead of a CNAME for CloudFront. A fixed A record breaks when CloudFront rotates its edge IPs.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Recommended fix</p>
+          <p>Ask KMUTT CC to change the record from A to CNAME (or alias). If outages continue afterwards, investigate the root cause jointly with KMUTT CC.</p>
+          <button class="jump" data-target="#rec1">View full action →</button>
+        </div>
+      </article>
+
+      <article class="pf cap">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--cap)">Capacity</span><span class="badge ok">Resolved</span></div>
+          <h3>Undersized L instance crashing under load</h3>
+          <p class="impact">5h 59m · 5 events · Jan–Mar only</p>
+          <p>The L-sized server crashed repeatedly. No recurrence after the XL upgrade at end of March.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Status & follow-up</p>
+          <p>Fixed by the L→XL upgrade. Keep monitoring CPU/memory headroom and add autoscaling or alerting before load nears the old failure threshold.</p>
+          <button class="jump" data-target="#rec3">View full action →</button>
+        </div>
+      </article>
+
+      <article class="pf sec">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--sec)">DDoS</span><span class="badge ok">Mitigated</span></div>
+          <h3>Denial-of-service attack</h3>
+          <p class="impact">10 min · 1 event · 5 Mar</p>
+          <p>A short attack that triggered the move to CloudFront, which now absorbs this kind of traffic.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Status & follow-up</p>
+          <p>CloudFront is the mitigation — no separate CDN needed. Optionally layer AWS WAF / Shield on the distribution for rate-limiting and broader coverage.</p>
+          <button class="jump" data-target="#rec5">View full action →</button>
+        </div>
+      </article>
+
+      <article class="pf oth">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--oth)">Other</span><span class="badge neutral">Process gap</span></div>
+          <h3>Incidents with no recorded cause</h3>
+          <p class="impact">11 min · 2 events · 12 Feb, 12 Mar</p>
+          <p>Two outages were logged with no root cause, which weakens future trend analysis.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Recommended fix</p>
+          <p>Record cause, detection method, and resolution for every incident going forward.</p>
+          <button class="jump" data-target="#rec4">View full action →</button>
+        </div>
+      </article>
+
+      <article class="pf mnt">
+        <div class="prob">
+          <div class="head"><span class="pill" style="background:var(--mnt)">Maint.</span><span class="badge neutral">Planned</span></div>
+          <h3>Planned server resize windows</h3>
+          <p class="impact">11 min · 2 events · expected</p>
+          <p>Brief, intentional downtime during resizes. Not a fault.</p>
+        </div>
+        <div class="fix">
+          <p class="lbl">Status</p>
+          <p>No action required. Schedule future resizes in low-traffic windows and announce them in advance where possible.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="rec-sub">Decision required — SSL certificate renewal</p>
+    <div class="decision" id="ssl-decision">
+      <div class="dh"><span class="pill" style="background:var(--ssl)">SSL</span><span class="badge dec">Decision required</span></div>
+      <h3>How should we renew the TLS certificates?</h3>
+      <div class="opts">
+        <div class="opt rec">
+          <span class="tag">Dev recommendation</span>
+          <h4>Option 1 · AWS-managed certificates</h4>
+          <dl>
+            <dt>What it means</dt><dd>Switch CloudFront and the load balancer to certificates that AWS issues and renews for us.</dd>
+            <dt>Effort</dt><dd>One-time setup, then nothing. Requires KMUTT CC to add one DNS record.</dd>
+            <dt>Ongoing risk</dt><dd>None — renews automatically, so expiries can't recur.</dd>
+            <dt>Depends on</dt><dd>KMUTT CC adding and keeping a single DNS record.</dd>
+          </dl>
+        </div>
+        <div class="opt alt">
+          <span class="tag">Alternative</span>
+          <h4>Option 2 · Keep current certs + renewal script</h4>
+          <dl>
+            <dt>What it means</dt><dd>Build a program that renews the existing Let's Encrypt certificates and reloads them into AWS automatically.</dd>
+            <dt>Effort</dt><dd>Build and maintain a custom script covering both endpoints.</dd>
+            <dt>Ongoing risk</dt><dd>A moving part that can fail quietly — this is what caused the two outages.</dd>
+            <dt>Depends on</dt><dd>The script running reliably every cycle; still needs a validation step.</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="verdict"><b>Recommendation: Option 1.</b> Neither option has any licensing cost — the difference is engineering effort and risk. Option 1 removes the expiry risk permanently for a one-time setup; Option 2 rebuilds the fragility behind these outages. Either way, the only thing needed from leadership is approval to proceed; Option 1 also needs a one-off request to KMUTT CC for a DNS record.</p>
+      <p class="techy">Technical: Option 1 = native ACM certificates (us-east-1 for CloudFront, the ALB's region for the load balancer), DNS-validated; one validation CNAME covers both since they share a domain and account. Option 2 = scheduled job (e.g. Lambda + EventBridge) that re-imports to the same ACM ARNs, plus a 14-day expiry alarm as a backstop.</p>
+    </div>
+
+    <p class="rec-sub">Other recommended actions</p>
+    <ol class="recs">
+      <li id="rec1"><b>Correct the DNS record type with KMUTT CC.</b> Contact KMUTT CC and request that the CloudFront record be changed from an A record to a CNAME (or alias), so DNS resolves to CloudFront's current edge addresses instead of a fixed IP.</li>
+      <li id="rec2"><b>If outages persist, investigate jointly with KMUTT CC.</b> Should DNS failures continue after the record change, trace the root cause together with KMUTT CC rather than in isolation — the records are managed on their side.</li>
+      <li id="rec3"><b>Confirm the XL instance is the right long-term size.</b> The upgrade appears to have fixed the capacity crashes — keep monitoring CPU/memory headroom and set autoscaling or alerting before load reaches the previous failure threshold.</li>
+      <li id="rec4"><b>Record a root cause for every incident.</b> Two events (12 Feb, 12 Mar) have no recorded cause. Capturing cause, detection method, and resolution makes future trend analysis far more reliable.</li>
+      <li id="rec5"><b>Build on the CloudFront DDoS protection already in place.</b> The CloudFront migration is itself the DDoS mitigation, so no separate CDN is needed. If not already enabled, consider layering AWS WAF / Shield on the distribution for rate-limiting and additional attack coverage.</li>
+    </ol>
+  </section>
+
+  <section id="log">
+    <h2>Full incident log</h2>
+    <div class="filters" role="group" aria-label="Filter by category">
+      <button class="chip" data-f="all" aria-pressed="true">All (20)</button>
+      <button class="chip" data-f="dns" aria-pressed="false">DNS (8)</button>
+      <button class="chip" data-f="ssl" aria-pressed="false">SSL (2)</button>
+      <button class="chip" data-f="cap" aria-pressed="false">Capacity (5)</button>
+      <button class="chip" data-f="mnt" aria-pressed="false">Maint. (2)</button>
+      <button class="chip" data-f="sec" aria-pressed="false">DDoS (1)</button>
+      <button class="chip" data-f="oth" aria-pressed="false">Other (2)</button>
+    </div>
+    <table class="log">
+      <thead><tr><th>Date</th><th>Window</th><th>Duration</th><th>Root cause</th><th>Category</th></tr></thead>
+      <tbody id="logBody">
+        <tr data-cat="cap"><td>26/01/2026</td><td>15:30–17:09</td><td>1h 39m</td><td>Undersized server (L) — crash</td><td><span class="pill" style="background:var(--cap)">Capacity</span></td></tr>
+        <tr data-cat="cap"><td>29/01/2026</td><td>20:11–21:46</td><td>1h 35m</td><td>Undersized server (L) — crash</td><td><span class="pill" style="background:var(--cap)">Capacity</span></td></tr>
+        <tr data-cat="cap"><td>31/01/2026</td><td>21:27–23:03</td><td>1h 36m</td><td>Undersized server (L) — crash</td><td><span class="pill" style="background:var(--cap)">Capacity</span></td></tr>
+        <tr data-cat="cap"><td>10/02/2026</td><td>02:09–03:12</td><td>1h 03m</td><td>Instance size / family mismatch</td><td><span class="pill" style="background:var(--cap)">Capacity</span></td></tr>
+        <tr data-cat="oth"><td>12/02/2026</td><td>08:34–08:39</td><td>5m</td><td>Unspecified</td><td><span class="pill" style="background:var(--oth)">Other</span></td></tr>
+        <tr data-cat="dns"><td>25/02/2026</td><td>06:19–07:22</td><td>1h 03m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="sec"><td>05/03/2026</td><td>15:49–15:59</td><td>10m</td><td>DDoS attack</td><td><span class="pill" style="background:var(--sec)">DDoS</span></td></tr>
+        <tr data-cat="mnt"><td>05/03/2026</td><td>22:10–22:15</td><td>5m</td><td>Planned server resize</td><td><span class="pill" style="background:var(--mnt)">Maint.</span></td></tr>
+        <tr data-cat="oth"><td>12/03/2026</td><td>00:56–01:02</td><td>6m</td><td>Unspecified</td><td><span class="pill" style="background:var(--oth)">Other</span></td></tr>
+        <tr data-cat="dns"><td>19/03/2026</td><td>06:13–07:46</td><td>1h 33m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="cap"><td>20/03/2026</td><td>10:59–11:05</td><td>6m</td><td>Undersized server (L) — crash</td><td><span class="pill" style="background:var(--cap)">Capacity</span></td></tr>
+        <tr data-cat="mnt"><td>27/03/2026</td><td>00:07–00:13</td><td>6m</td><td>Planned server resize</td><td><span class="pill" style="background:var(--mnt)">Maint.</span></td></tr>
+        <tr data-cat="dns"><td>30/03/2026</td><td>03:59–05:01</td><td>1h 02m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="ssl"><td>11/04/2026</td><td>01:07–06:15</td><td>5h 08m</td><td>SSL certificate expired</td><td><span class="pill" style="background:var(--ssl)">SSL</span></td></tr>
+        <tr data-cat="dns"><td>14/04/2026</td><td>05:05–06:03</td><td>58m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="dns"><td>04/05/2026</td><td>06:26–07:33</td><td>1h 07m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="dns"><td>23/05/2026</td><td>05:24–07:03</td><td>1h 39m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="dns"><td>28/05/2026</td><td>06:14–07:21</td><td>1h 07m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+        <tr data-cat="ssl"><td>09/06/2026</td><td>23:28–02:57</td><td>3h 29m</td><td>SSL certificate expired (overnight)</td><td><span class="pill" style="background:var(--ssl)">SSL</span></td></tr>
+        <tr data-cat="dns"><td>15/06/2026</td><td>06:10–07:23</td><td>1h 13m</td><td>DNS related</td><td><span class="pill" style="background:var(--dns)">DNS</span></td></tr>
+      </tbody>
+    </table>
+    <p class="count" id="rowCount">Showing all 20 incidents</p>
+    <p class="note">The overnight outage beginning 09/06 23:28 ended 10/06 02:57. Events without a recorded cause are shown as “Unspecified.” The server was resized from L to XL at the end of March 2026.</p>
+  </section>
+
+  <div class="footer">
+    <span>Server Incident Report — Confidential</span>
+    <span>26 Jan – 15 Jun 2026</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // scroll-spy nav
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var map = {};
+  links.forEach(function(l){ map[l.getAttribute('href')] = l; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        var a = map['#'+e.target.id]; if(a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  Array.prototype.slice.call(document.querySelectorAll('section[id]')).forEach(function(s){ obs.observe(s); });
+
+  // jump from problem -> recommendation, with highlight
+  Array.prototype.slice.call(document.querySelectorAll('.jump')).forEach(function(b){
+    b.addEventListener('click', function(){
+      var t = document.querySelector(b.getAttribute('data-target'));
+      if(!t) return;
+      t.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' });
+      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+      setTimeout(function(){ t.classList.remove('flash'); }, 1800);
+    });
+  });
+
+  // incident log filter
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var rows = Array.prototype.slice.call(document.querySelectorAll('#logBody tr'));
+  var counter = document.getElementById('rowCount');
+  var names = {all:'all', dns:'DNS', ssl:'SSL', cap:'Capacity', mnt:'maintenance', sec:'DDoS', oth:'other'};
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){
+      chips.forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      c.setAttribute('aria-pressed','true');
+      var f = c.getAttribute('data-f'), n = 0;
+      rows.forEach(function(r){
+        var show = (f === 'all' || r.getAttribute('data-cat') === f);
+        r.style.display = show ? '' : 'none';
+        if(show) n++;
+      });
+      counter.textContent = (f === 'all') ? ('Showing all ' + n + ' incidents')
+                                          : ('Showing ' + n + ' ' + names[f] + ' incident' + (n===1?'':'s'));
+    });
+  });
+})();
+</script>
 </body>
 </html>
