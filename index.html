@@ -216,7 +216,7 @@
   <section id="summary">
     <h2>Executive summary</h2>
     <p class="lead">Over the 20-week period, 20 separate outages were recorded, totalling roughly <b>24 hours 50 minutes</b> of downtime. Three causes dominate. DNS-related failures are the most frequent problem (8 of 20 events) and have become the recurring issue since April. Expired SSL certificates produced the two single longest outages and the most lost minutes per event. Capacity problems on the L-sized server were the early pain point but appear resolved after the upgrade to an XL instance at the end of March.</p>
-    <p>Every issue below has a clear fix, and most are straightforward for the team to action. <b>One choice needs a decision from leadership</b> — how to renew the SSL certificates — where the development team recommends Option 1. It is summarised in <a href="#ssl-decision" style="color:var(--dns);font-weight:600;text-decoration:none">Problem → Fix</a>.</p>
+    <p>Most issues below have a clear fix the team can action directly. <b>Two need a decision first</b> — how to renew the SSL certificates, and how to fix the DNS — both set out in <a href="#fixes" style="color:var(--dns);font-weight:600;text-decoration:none">Problem → Fix</a>. The team's recommendation on the SSL choice is marked.</p>
     <div class="callout">
       <h3>How the incidents connect</h3>
       <p>The DDoS and DNS categories are linked. The DDoS event on 5 March prompted an architecture change: traffic was moved from connecting directly to the EC2 instance to routing through <b>Amazon CloudFront</b>, in order to absorb attack traffic and gain better control over requests to the web app. That migration required repointing DNS from EC2 to CloudFront — and is the origin of the recurring DNS failures described below.</p>
@@ -265,7 +265,7 @@
       </div>
       <div class="pcard">
         <h3>DNS failures trace back to the CloudFront migration</h3>
-        <p>After moving the app behind CloudFront, DNS had to be repointed from EC2 to CloudFront. KMUTT CC (the DNS administrator) was asked to add either an A record to the CloudFront domain or a CNAME, and chose to add an <b>A record</b>. Because CloudFront serves from a rotating pool of edge IP addresses, a fixed A record can fail whenever those addresses change — consistent with the recurring early-morning outages (~04:00–07:30) seen since the migration. A CNAME or alias record would follow CloudFront's current addresses automatically.</p>
+        <p>After moving the app behind CloudFront, DNS had to be repointed from EC2 to CloudFront. KMUTT CC (the DNS administrator) was asked to add either an A record to the CloudFront domain or a CNAME, and chose to add an <b>A record</b>. Because CloudFront serves from a rotating pool of edge IP addresses, a fixed A record resolves fine most of the time but breaks whenever those addresses change — which is why the site appears to work yet fails intermittently in the early-morning window (~04:00–07:30) seen since the migration. A CNAME or alias record would follow CloudFront's current addresses automatically.</p>
       </div>
       <div class="pcard">
         <h3>SSL expiries are rare but very costly</h3>
@@ -276,7 +276,7 @@
 
   <section id="fixes">
     <h2>Problem → Fix</h2>
-    <p class="note" style="font-style:normal;color:var(--muted);margin-bottom:18px">Each problem is paired with its recommended action and current status. One item — SSL renewal — needs a leadership decision; the rest are for the team to action. Use the buttons to jump to the detail.</p>
+    <p class="note" style="font-style:normal;color:var(--muted);margin-bottom:18px">Each problem is paired with its recommended action and current status. Two items — SSL renewal and the DNS fix — have more than one viable approach and need a decision before we proceed; the rest are for the team to action. Use the buttons to jump to the detail.</p>
 
     <div class="matrix">
 
@@ -303,8 +303,8 @@
         </div>
         <div class="fix">
           <p class="lbl">Recommended fix</p>
-          <p>Ask KMUTT CC to change the record from A to CNAME (or alias). If outages continue afterwards, investigate the root cause jointly with KMUTT CC.</p>
-          <button class="jump" data-target="#rec1">View full action →</button>
+          <p>Two options: ask KMUTT CC to change the record from A to CNAME, or move to a domain we control so we manage DNS ourselves. See the decision below.</p>
+          <button class="jump" data-target="#dns-decision">View options →</button>
         </div>
       </article>
 
@@ -318,7 +318,7 @@
         <div class="fix">
           <p class="lbl">Status & follow-up</p>
           <p>Fixed by the L→XL upgrade. Keep monitoring CPU/memory headroom and add autoscaling or alerting before load nears the old failure threshold.</p>
-          <button class="jump" data-target="#rec3">View full action →</button>
+          <button class="jump" data-target="#rec1">View full action →</button>
         </div>
       </article>
 
@@ -332,21 +332,21 @@
         <div class="fix">
           <p class="lbl">Status & follow-up</p>
           <p>CloudFront is the mitigation — no separate CDN needed. Optionally layer AWS WAF / Shield on the distribution for rate-limiting and broader coverage.</p>
-          <button class="jump" data-target="#rec5">View full action →</button>
+          <button class="jump" data-target="#rec3">View full action →</button>
         </div>
       </article>
 
       <article class="pf oth">
         <div class="prob">
           <div class="head"><span class="pill" style="background:var(--oth)">Other</span><span class="badge neutral">Process gap</span></div>
-          <h3>Incidents with no recorded cause</h3>
+          <h3>No central record of incidents</h3>
           <p class="impact">11 min · 2 events · 12 Feb, 12 Mar</p>
-          <p>Two outages were logged with no root cause, which weakens future trend analysis.</p>
+          <p>Incidents are tracked informally (channel monitor plus ad-hoc canvas notes), and two outages were logged with no root cause — which weakens future analysis.</p>
         </div>
         <div class="fix">
           <p class="lbl">Recommended fix</p>
-          <p>Record cause, detection method, and resolution for every incident going forward.</p>
-          <button class="jump" data-target="#rec4">View full action →</button>
+          <p>Formalise the channel's Slack canvas as the log — date, window, cause, and fix per outage, in a consistent table everyone in the channel can see.</p>
+          <button class="jump" data-target="#rec2">View full action →</button>
         </div>
       </article>
 
@@ -367,7 +367,7 @@
 
     <p class="rec-sub">Decision required — SSL certificate renewal</p>
     <div class="decision" id="ssl-decision">
-      <div class="dh"><span class="pill" style="background:var(--ssl)">SSL</span><span class="badge dec">Decision required</span></div>
+      <div class="dh"><span class="pill" style="background:var(--ssl)">SSL</span><span class="badge dec">Decision needed</span></div>
       <h3>How should we renew the TLS certificates?</h3>
       <div class="opts">
         <div class="opt rec">
@@ -391,22 +391,49 @@
           </dl>
         </div>
       </div>
-      <p class="verdict"><b>Recommendation: Option 1.</b> Neither option has any licensing cost — the difference is engineering effort and risk. Option 1 removes the expiry risk permanently for a one-time setup; Option 2 rebuilds the fragility behind these outages. Either way, the only thing needed from leadership is approval to proceed; Option 1 also needs a one-off request to KMUTT CC for a DNS record.</p>
+      <p class="verdict"><b>Recommendation: Option 1.</b> Neither option has any licensing cost — the difference is engineering effort and risk. Option 1 removes the expiry risk permanently for a one-time setup; Option 2 rebuilds the fragility behind these outages. Either way, the only thing needed is sign-off on the approach; Option 1 also needs a one-off request to KMUTT CC for a DNS record.</p>
       <p class="techy">Technical: Option 1 = native ACM certificates (us-east-1 for CloudFront, the ALB's region for the load balancer), DNS-validated; one validation CNAME covers both since they share a domain and account. Option 2 = scheduled job (e.g. Lambda + EventBridge) that re-imports to the same ACM ARNs, plus a 14-day expiry alarm as a backstop.</p>
+    </div>
+
+    <p class="rec-sub">Decision required — DNS fix</p>
+    <div class="decision" id="dns-decision">
+      <div class="dh"><span class="pill" style="background:var(--dns)">DNS</span><span class="badge dec">Decision needed</span></div>
+      <h3>How should we stop the DNS from breaking?</h3>
+      <div class="opts">
+        <div class="opt alt">
+          <span class="tag">Option 1</span>
+          <h4>Fix the record with KMUTT CC</h4>
+          <dl>
+            <dt>What it means</dt><dd>Ask KMUTT CC to change the record from A to CNAME (or alias) so it follows CloudFront's addresses.</dd>
+            <dt>Effort</dt><dd>A request to KMUTT CC; nothing changes on our side or for users.</dd>
+            <dt>Ongoing risk</dt><dd>We stay dependent on KMUTT CC for DNS — and the wrong record type was their call once already. If it persists, investigate jointly with them.</dd>
+          </dl>
+        </div>
+        <div class="opt alt">
+          <span class="tag">Option 2</span>
+          <h4>Move to a domain we control</h4>
+          <dl>
+            <dt>What it means</dt><dd>Put the site on a domain (or delegated subdomain) we manage ourselves and point it at CloudFront directly.</dd>
+            <dt>Effort</dt><dd>Set up the zone and repoint. A new domain avoids KMUTT CC entirely; a subdomain needs them once to delegate.</dd>
+            <dt>Ongoing risk</dt><dd>Low — we control the records and can fix them ourselves, so this can't recur. Small recurring cost; a brand-new domain may mean a URL change for users.</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="verdict" style="background:#EEF4FB;border-left-color:var(--dns);color:#27384a"><b>Trade-off:</b> Option 1 is the quick fix and changes nothing for users, but keeps us reliant on KMUTT CC. Option 2 takes more setup (and possibly a URL change) but gives us direct control so the problem can't come back. No recommendation is marked here yet — say which you'd prefer and it can be flagged like the SSL choice.</p>
+      <p class="techy">Technical: Option 1 = switch the public record to a CNAME/alias to the CloudFront domain. Option 2 = host the zone in Route (or other provider) and use an alias record to the CloudFront distribution (tracks the edge IPs automatically); a new domain is fully independent, a subdomain needs a one-time NS delegation from KMUTT CC.</p>
     </div>
 
     <p class="rec-sub">Other recommended actions</p>
     <ol class="recs">
-      <li id="rec1"><b>Correct the DNS record type with KMUTT CC.</b> Contact KMUTT CC and request that the CloudFront record be changed from an A record to a CNAME (or alias), so DNS resolves to CloudFront's current edge addresses instead of a fixed IP.</li>
-      <li id="rec2"><b>If outages persist, investigate jointly with KMUTT CC.</b> Should DNS failures continue after the record change, trace the root cause together with KMUTT CC rather than in isolation — the records are managed on their side.</li>
-      <li id="rec3"><b>Confirm the XL instance is the right long-term size.</b> The upgrade appears to have fixed the capacity crashes — keep monitoring CPU/memory headroom and set autoscaling or alerting before load reaches the previous failure threshold.</li>
-      <li id="rec4"><b>Record a root cause for every incident.</b> Two events (12 Feb, 12 Mar) have no recorded cause. Capturing cause, detection method, and resolution makes future trend analysis far more reliable.</li>
-      <li id="rec5"><b>Build on the CloudFront DDoS protection already in place.</b> The CloudFront migration is itself the DDoS mitigation, so no separate CDN is needed. If not already enabled, consider layering AWS WAF / Shield on the distribution for rate-limiting and additional attack coverage.</li>
+      <li id="rec1"><b>Confirm the XL instance is the right long-term size.</b> The upgrade appears to have fixed the capacity crashes — keep monitoring CPU/memory headroom and set autoscaling or alerting before load reaches the previous failure threshold.</li>
+      <li id="rec2"><b>Keep the incident log in the channel's Slack canvas.</b> Today incidents are tracked informally — watched through the channel monitor, with notable ones noted ad hoc in the canvas — and two events (12 Feb, 12 Mar) ended up with no recorded cause. The proposal is to formalise the existing channel canvas as the single log: every outage recorded with date, time window, cause, and fix in a consistent table, kept current by one owner. It's already familiar and visible to everyone in the channel — which also answers who has access (channel members) — so there's no new tool to adopt. Keeping a fixed structure rather than free-form notes is what keeps it useful for spotting patterns later.</li>
+      <li id="rec3"><b>Build on the CloudFront DDoS protection already in place.</b> The CloudFront migration is itself the DDoS mitigation, so no separate CDN is needed. If not already enabled, consider layering AWS WAF / Shield on the distribution for rate-limiting and additional attack coverage.</li>
     </ol>
   </section>
 
   <section id="log">
     <h2>Full incident log</h2>
+    <p class="note" style="font-style:normal;margin:-4px 0 14px">These incidents are currently compiled by hand from channel monitoring; there is no central record yet — action 2 proposes formalising the channel's Slack canvas as the log.</p>
     <div class="filters" role="group" aria-label="Filter by category">
       <button class="chip" data-f="all" aria-pressed="true">All (20)</button>
       <button class="chip" data-f="dns" aria-pressed="false">DNS (8)</button>
